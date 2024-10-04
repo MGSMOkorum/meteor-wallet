@@ -6,7 +6,7 @@ export const ContactList = () => {
     useSubscribe("contacts");
 
     const contacts = useTracker(() => {
-        return ContactsCollection.find({}).fetch();
+        return ContactsCollection.find({}, {sort:{cretedAt:-1}}).fetch();
     });
 
     return (
