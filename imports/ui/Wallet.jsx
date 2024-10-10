@@ -1,12 +1,25 @@
 import React, { useState } from "react";
 import { Modal } from "./components/Modal";
+import { SelectContact } from "./components/SelectContact";
+import { useSubscribe, useFind } from 'meteor/react-meteor-data'
+import { ContactsCollection } from "../api/ContactsCollection";
+import { Loading } from "./components/Loading";
 
 
 export const Wallet = () => {
+
+  const isLoadingContacts = useSubscribe("contacts");
+    const contacts = useFind(() => 
+      ContactsCollection.find(
+        {archived:{$ne:true}}, 
+        {sort:{cretedAt:-1}}
+      )
+    )
+
   const [open,setOpen]=useState(false)
   const [isTransfering, setIsTransfering] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [destinationwallet, setDestinationWallet] = useState("")
+  const [destinationwallet, setDestinationWallet] = useState({})
   const [errorMessage, setErrorMessage] = useState("")
 
   const wallet = {
@@ -17,6 +30,10 @@ export const Wallet = () => {
 
   const addTransaction = () =>{
     console.log('New transaction',amount,destinationwallet)
+  }
+
+  if(isLoadingContacts()){
+    return <Loading/>
   }
 
   return (
@@ -71,19 +88,17 @@ export const Wallet = () => {
         }
         body={
           <>
-            { isTransfering && (<div>
-              <label htmlFor="destination" className="block text-sm font-medium text-gray-700">
-                Destination wallet
-              </label>
-              <input
-                type="string"
-                id="destination"
-                value={destinationwallet}
-                onChange={(e) => setDestinationWallet(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            { isTransfering && (<div className="mt-2">
+              
+              <SelectContact
+              title="Destination contact"
+              contact={destinationwallet}
+              setContact={setDestinationWallet}
+              contacts={contacts}
               />
-            </div>)}
-            <div>
+            </div>
+          )}
+            <div className="mt-2">
               <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
                 Amount
               </label>
