@@ -18,6 +18,10 @@ Meteor.methods({
     'contacts.remove'({ contactId }) {
         check(contactId ,String)
         return ContactsCollection.removeAsync(contactId);
+    },
+    'contacts.archive' ({contactId}){
+        check(contactId ,String)
+        return ContactsCollection.updateAsync({_id: contactId}, {$set:{archived:true}})
     }
 })
 
