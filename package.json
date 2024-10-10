@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.20.7",
+    "@headlessui/react": "^2.1.9",
     "@heroicons/react": "^1.0.6",
     "autoprefixer": "^10.4.20",
     "meteor-node-stubs": "^1.2.5",
