@@ -29,7 +29,7 @@ export const Wallet = () => {
   const [errorMessage, setErrorMessage] = useState("")
 
   const addTransaction = () => {
-    Meteor.call('transactions.insert', {
+     Meteor.call('transactions.insert', {
       isTransfering,
       sourceWalletId: wallet?._id,
       // @ts-ignore
@@ -37,7 +37,9 @@ export const Wallet = () => {
       amount:Number(amount),
     }, (errorResponse)=>{
       if(errorResponse){
-        setErrorMessage(errorResponse.error)
+        errorResponse.details?.forEach(error => {
+          setErrorMessage(error.message)
+        });
       }else{
         setOpen(false);
         setDestinationWallet({})
